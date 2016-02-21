@@ -19,64 +19,62 @@
 
     <!-- Navigation -->
 
-    <section class="play">     
+      <section class="play">     
         <div class="container">
-          <div class="row">
-            <div class="col-lg-6 centered">
-              <p>Click the button to get your coordinates.</p>
-            </div>
-            <div class="col-lg-6 centered">  
-              <button onclick="getLocation()">Try It</button>
-            </div>  
-          </div>  
-          <div class="row">
-            <div class="col-lg-6 col-lg-offset-3 centered">
-              <p id="demo"></p>
-            </div>
-          </div> 
-        </div>     
+            <div class="row">
+             <!DOCTYPE html>
+<html>
+<body>
 
+<p id="demo">Click the button to get your position.</p>
+
+<button onclick="getLocation()">Try It</button>
+
+<div id="mapholder"></div>
 
 <script>
 var x = document.getElementById("demo");
 
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else { 
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
         x.innerHTML = "Geolocation is not supported by this browser.";
     }
 }
 
 function showPosition(position) {
-    x.innerHTML = "Latitude: " + position.coords.latitude + 
-    "<br>Longitude: " + position.coords.longitude;  
+    var latlon = position.coords.latitude + "," + position.coords.longitude;
+
+    var img_url = "http://maps.googleapis.com/maps/api/staticmap?center="
+    +latlon+"&zoom=17&size=400x300&sensor=false";
+    document.getElementById("mapholder").innerHTML = "<img src='"+img_url+"'>";
 }
 
-var options = {
-  enableHighAccuracy: true,
-  timeout: 5000,
-  maximumAge: 0
-};
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            x.innerHTML = "User denied the request for Geolocation."
+            break;
+        case error.POSITION_UNAVAILABLE:
+            x.innerHTML = "Location information is unavailable."
+            break;
+        case error.TIMEOUT:
+            x.innerHTML = "The request to get user location timed out."
+            break;
+        case error.UNKNOWN_ERROR:
+            x.innerHTML = "An unknown error occurred."
+            break;
+    }
+}
+</script>
 
-function success(pos) {
-  var crd = pos.coords;
-  var lat= crd.latitude;
-  var long= crd.longitude;
-  console.log('Your current position is:');
-  console.log('Latitude : ' + crd.latitude);
-  console.log('Longitude: ' + crd.longitude);
-  console.log('More or less ' + crd.accuracy + ' meters.');
-};
+</body>
+</html>
 
-function error(err) {
-  console.warn('ERROR(' + err.code + '): ' + err.message);
-};
-
-
-</script>                         
+            </div>                      
         </div>
-    </section> 
+      </section> 
      
     <!-- Footer -->
     <?php require('footer.php'); ?>
