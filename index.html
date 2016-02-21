@@ -46,10 +46,27 @@
     <!-- Header -->
     <header>
         <img src="img/stf.jpg" class="img-responsive" align="center">
-            
-        
     </header>
+    <p>Click the button to get your coordinates.</p>
 
+<button onclick="getLocation()">Try It</button>
+
+<p id="demo"></p>
+
+<script>
+var x = document.getElementById("demo");
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(showPosition);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";}
+    }
+    
+function showPosition(position) {
+    x.innerHTML="Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude;	
+}
+</script>
             <div class="container-fluid">
             <section>
                  <img src="img/header.jpeg" class="img-responsive" align="center">
