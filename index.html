@@ -1,71 +1,85 @@
+<?php
+   session_start();
+   include('header.php');
+?>
+
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Geocoding service</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+
+<head>
+
     <meta charset="utf-8">
-    <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #map {
-        height: 100%;
-      }
-#floating-panel {
-  position: absolute;
-  top: 10px;
-  left: 25%;
-  z-index: 5;
-  background-color: #fff;
-  padding: 5px;
-  border: 1px solid #999;
-  text-align: center;
-  font-family: 'Roboto','sans-serif';
-  line-height: 30px;
-  padding-left: 10px;
-}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Let's Play!</title>
 
-    </style>
-  </head>
-  <body>
-    <div id="floating-panel">
-      <input id="address" type="textbox" value="Mantri Tower,Dahisar">
-      <input id="submit" type="button" value="Geocode">
-    </div>
-    <div id="map"></div>
-    <script>
-function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 17, 
-    center: {lat: 19.254929, lng: 72.858129}
-  });
-  var geocoder = new google.maps.Geocoder();
+  
+</head>  
 
-  document.getElementById('submit').addEventListener('click', function() {
-    geocodeAddress(geocoder, map);
-  });
-}
+<body id="page-top" class="index">
 
-function geocodeAddress(geocoder, resultsMap) {
-  var address = document.getElementById('address').value;
-  geocoder.geocode({'address': address}, function(results, status) {
-    if (status === google.maps.GeocoderStatus.OK) {
-      resultsMap.setCenter(results[0].geometry.location);
-      var marker = new google.maps.Marker({
-        map: resultsMap,
-        position: results[0].geometry.location
-      });
-    } else {
-      alert('Geocode was not successful for the following reason: ' + status);
+    <!-- Navigation -->
+
+    <section class="play">     
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6 centered">
+              <p>Click the button to get your coordinates.</p>
+            </div>
+            <div class="col-lg-6 centered">  
+              <button onclick="getLocation()">Try It</button>
+            </div>  
+          </div>  
+          <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 centered">
+              <p id="demo"></p>
+            </div>
+          </div> 
+        </div>     
+
+
+<script>
+var x = document.getElementById("demo");
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
     }
-  });
 }
 
-    </script>                                                 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe5IpzexT77Fgln7an7bh7VxtnJSa7tcE&signed_in=true&callback=initMap"
-        async defer></script>
+function showPosition(position) {
+    x.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude;  
+}
+
+var options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
+};
+
+function success(pos) {
+  var crd = pos.coords;
+  var lat= crd.latitude;
+  var long= crd.longitude;
+  console.log('Your current position is:');
+  console.log('Latitude : ' + crd.latitude);
+  console.log('Longitude: ' + crd.longitude);
+  console.log('More or less ' + crd.accuracy + ' meters.');
+};
+
+function error(err) {
+  console.warn('ERROR(' + err.code + '): ' + err.message);
+};
+
+
+</script>                         
+        </div>
+    </section> 
+     
+    <!-- Footer -->
+    <?php require('footer.php'); ?>
+
   </body>
 </html>
-
