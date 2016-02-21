@@ -1,70 +1,39 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>Geocoding service</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #map {
-        height: 100%;
-      }
-#floating-panel {
-  position: absolute;
-  top: 10px;
-  left: 25%;
-  z-index: 5;
-  background-color: #fff;
-  padding: 5px;
-  border: 1px solid #999;
-  text-align: center;
-  font-family: 'Roboto','sans-serif';
-  line-height: 30px;
-  padding-left: 10px;
-}
+    <head>
+      <title>ANGULAR JS</title>
+    </head>
+    <body ng-app="locatorDemo" ng-controller="MainCtrl">
+      <nav>
+          <h1>
+            Locator <small>a set of google location services for AngularJS</small>
+          </h1><!--
+           --><a href="https://github.com/winkerVSbecks/locator">github</a>
+        </nav>
 
-    </style>
-  </head>
-  <body>
-    <div id="floating-panel">
-      <input id="address" type="textbox" value="Mantri Tower,Dahisar">
-      <input id="submit" type="button" value="Geocode">
-    </div>
-    <div id="map"></div>
-    <script>
-function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 17, 
-    center: {lat: 19.254929, lng: 72.858129}
-  });
-  var geocoder = new google.maps.Geocoder();
+        <small class="tag-line">A set of google location services for AngularJS
+        </small>
 
-  document.getElementById('submit').addEventListener('click', function() {
-    geocodeAddress(geocoder, map);
-  });
-}
+        <div class="column black flex-item">
+          <h2>Location Lookup <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/149125/powered-by-google-on-non-white@2x.png" width="104px"></h2>
+          <location-lookup ng-model="lookedUpLocation" limit-to="4"></location-lookup>
+        </div>
 
-function geocodeAddress(geocoder, resultsMap) {
-  var address = document.getElementById('address').value;
-  geocoder.geocode({'address': address}, function(results, status) {
-    if (status === google.maps.GeocoderStatus.OK) {
-      resultsMap.setCenter(results[0].geometry.location);
-      var marker = new google.maps.Marker({
-        map: resultsMap,
-        position: results[0].geometry.location
-      });
-    } else {
-      alert('Geocode was not successful for the following reason: ' + status);
-    }
-  });
-}
+        <div class="column blue flex-item">
+          <h2>Location Picker <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/149125/powered-by-google-on-non-white@2x.png" width="104px"></h2>
+          <location-picker ng-model="pickedLocation" limit-to="5"></location-picker>
+        </div>
 
-    </script>                                                 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe5IpzexT77Fgln7an7bh7VxtnJSa7tcE&signed_in=true&callback=initMap"
-        async defer></script>
-  </body>
+        <div ng-class="{ false: 'modal', true: 'modal--show' }[isModalVisible]">
+          <div class="overlay" ng-click="toggleModal()"></div>
+          <div class="modal__contents modal--transition">
+            <a class="modal__close" href="" ng-click="toggleModal()">&times;</a>
+            <h3 ng-if="pickedLocation">Picked Location</h3>
+            <p ng-if="pickedLocation">Name: <span class="muted">{{pickedLocation.name}}</span><br/>Description: <span class="muted">{{pickedLocation.description}}</span><br/>Latitude: <span class="muted">{{pickedLocation.latitude}}</span><br/>Longitude: <span class="muted">{{pickedLocation.longitude}}</span></p>
+            <br/>
+            <br/>
+            <h3 ng-if="lookedUpLocation">Looked Up Location</h3>
+            <p ng-if="lookedUpLocation">Name: <span class="muted">{{lookedUpLocation.name}}</span><br/>Description: <span class="muted">{{lookedUpLocation.description}}</span><br/>Latitude: <span class="muted">{{lookedUpLocation.latitude}}</span><br/>Longitude: <span class="muted">{{lookedUpLocation.longitude}}</span></p>
+          </div>
+        </div>
+    </body>
 </html>
