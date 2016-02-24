@@ -1,81 +1,64 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
+  <head>
+    <title>Geolocation</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      // Note: This example requires that you consent to location sharing when
+      // prompted by your browser. If you see the error "The Geolocation service
+      // failed.", it means you probably did not give permission for the browser to
+      // locate you.
 
-<head>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 6
+        });
+        var infoWindow = new google.maps.InfoWindow({map: map});
 
-    <title>Sports Team Finder</title>
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
 
-     <style>
-  .carousel-inner > .item > img,
-  .carousel-inner > .item > a > img {
-      width: auto;
-      margin:0px;
-      height:auto;
-  }
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+      }
 
-  @-moz-keyframes blink {0%{opacity:1;} 50%{opacity:0;} 100%{opacity:1;}} /* Firefox */
-@-webkit-keyframes blink {0%{opacity:1;} 50%{opacity:0;} 100%{opacity:1;}} /* Webkit */
-@-ms-keyframes blink {0%{opacity:1;} 50%{opacity:0;} 100%{opacity:1;}} /* IE */
-@keyframes blink {0%{opacity:1;} 50%{opacity:0;} 100%{opacity:1;}} /* Opera and prob css3 final iteration */
-
-  .blink img{
-       
-        -moz-transition:all 1s ease-in-out;
-        -webkit-transition:all 1s ease-in-out;
-        -o-transition:all 1s ease-in-out;
-        -ms-transition:all 1s ease-in-out;
-        transition:all 1s ease-in-out;
-        /* order: name, direction, duration, iteration-count, timing-function */  
-        -moz-animation:blink normal 2s infinite ease-in-out; /* Firefox */
-        -webkit-animation:blink normal 2s infinite ease-in-out; /* Webkit */
-        -ms-animation:blink normal 2s infinite ease-in-out; /* IE */
-        animation:blink normal 2s infinite ease-in-out; /* Opera and prob css3 final iteration */
-  
-  }
-  </style>
-
- 
-</head>
-
-<body id="page-top" class="index">
-
-    <!-- Navigation -->
-    <?php include 'header.php';?>
-
-    <!-- Header -->
-    <header>
-        <img src="img/stf.jpg" class="img-responsive" align="center">
-    </header>
-    <p>Click the button to get your coordinates.</p>
-
-<button onclick="getLocation()">Try It</button>
-
-<p id="demo"></p>
-
-<script>
-var x = document.getElementById("demo");
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(showPosition);
-    } else { 
-        x.innerHTML = "Geolocation is not supported by this browser.";}
-    }
-    
-function showPosition(position) {
-    x.innerHTML="Latitude: " + position.coords.latitude + 
-    "<br>Longitude: " + position.coords.longitude;	
-}
-</script>
-            <div class="container-fluid">
-            <section>
-                 <img src="img/header.jpeg" class="img-responsive" align="center">
-             </section>     
-        </div>
-
-     <!-- Footer -->
-    <?php include 'footer.php';?>
-
-</body>
-
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+      }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8-ctYujss0cFqfG2MtbpNFiFPxFLfVNI&signed_in=true&callback=initMap">
+    </script>
+  </body>
 </html>
